@@ -1,31 +1,69 @@
-import React from 'react'
-import phonesData from '../data/phones.json';
+import React, { useState } from "react";
+import phonesData from "../data/phones.json";
 
-const PhoneDetails = (props) => {
+const PhoneDetails = props => {
   const { params } = props.match;
-  const foundPhone = phonesData.find( phone => phone.id === parseInt(params.phoneId) )
-  console.log( foundPhone )
+  const foundPhone = phonesData.find(
+    phone => phone.id === parseInt(params.phoneId)
+  );
 
-  /*
-  {
-    "id": 0,
-    "name": "iPhone 7",
-    "manufacturer": "Apple",
-    "description": "iPhone 7 dramatically improves the most important aspects of the iPhone experience. It introduces advanced new camera systems. The best performance and battery life ever in an iPhone. Immersive stereo speakers. The brightest, most colorful iPhone display. Splash and water resistance*. And it looks every bit as powerful as it is. This is iPhone 7.",
-    "color": "black",
-    "price": 769,
-    "imageFileName": "IPhone_7.png",
-    "screen": "4,7 inch IPS",
-    "processor": "A10 Fusion",
-    "ram": 2
-  }
-  */
+  console.log(foundPhone);
+
+  const [spinner, setSpinner] = useState(true);
+  const drawSpinner = (
+    <div className="d-flex justify-content-center">
+      <div className="spinner-border" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
+
+  setTimeout(() => setSpinner(false), 500);
 
   return (
-      <article className="PhoneDetail">
-        <p> { foundPhone.description } </p>
-      </article>
-    )
-}
+    <article className="PhoneDetail">
+      {spinner
+        ? drawSpinner
+        : !spinner && (
+            <div className="text-left row">
+              <div className="p-2 col-4">
+                <img
+                  className="card-img"
+                  src={
+                    process.env.PUBLIC_URL +
+                    `/images/${foundPhone.imageFileName}`
+                  }
+                  alt={foundPhone.name}
+                />
+              </div>
+              <div className="p-4 col-8">
+                <h4 className="card-title">{foundPhone.name}</h4>
+                <p className="card-text">
+                  <strong>Manufacturer:</strong> {foundPhone.manufacturer}
+                </p>
+                <p className="card-text">
+                  <strong>Description:</strong> {foundPhone.description}
+                </p>
+                <p className="card-text">
+                  <strong>Color:</strong> {foundPhone.color}
+                </p>
+                <p className="card-text">
+                  <strong>Price:</strong> ${foundPhone.price}
+                </p>
+                <p className="card-text">
+                  <strong>Screen:</strong> {foundPhone.screen}
+                </p>
+                <p className="card-text">
+                  <strong>Processor:</strong> {foundPhone.processor}
+                </p>
+                <p className="card-text">
+                  <strong>Ram:</strong> {foundPhone.ram}
+                </p>
+              </div>
+            </div>
+          )}
+    </article>
+  );
+};
 
-export default PhoneDetails
+export default PhoneDetails;
